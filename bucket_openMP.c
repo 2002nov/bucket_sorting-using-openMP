@@ -91,8 +91,11 @@ void ParallelSort(int arr[], int ParallelSorted[], int arraySize, int numThreads
 
 int main() {
     int i;
-    int arraySize = 2000000; // Adjust the array size as needed
-    int numThreads = 16;
+    int arraySize = 10000; // Adjust the array size as needed
+    int numThreads = 4;
+
+    time_t seq_start, seq_end;
+
     // Adjust the number of threads as needed
     int *arr = (int *)malloc(arraySize * sizeof(int));
     int *ParallelSorted = (int *)malloc(arraySize * sizeof(int));
@@ -106,13 +109,32 @@ int main() {
     }
 
     // Sequential bucket Sort
+    time(&seq_start);
     SequentialSort(SequentialSorted, arraySize);
+    time(&seq_end);
 
     // Parallel bucket sort using OpenMP
     double openmp_start = omp_get_wtime();
     ParallelSort(arr, ParallelSorted, arraySize, numThreads);
+    //SequentialSort(SequentialSorted, arraySize);
     double openmp_end = omp_get_wtime();
+    
+    /*
+    printf("unsorted array: ");
+    for (i = 0; i < arraySize; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\nsorted array using sequential bucket sort: ");
+    for (i = 0; i < arraySize; i++) {
+        printf("%d ", sequentialSorted[i]);
+    }
+    printf("\nsorted array using parallel bucket sort: ");
+    for (i = 0; i < arraySize; i++) {
+        printf("%d ", ParallelSorted[i]);
+    }
+    */
 
+    //printf("\nTime used in sequential bucket sort using OpenMP: %lf seconds\n", difftime(seq_end, seq_start));
     printf("\nTime used in parallel bucket sort using OpenMP: %lf seconds\n", openmp_end - openmp_start);
 
     free(arr);
