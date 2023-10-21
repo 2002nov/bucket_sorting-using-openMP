@@ -1,3 +1,10 @@
+# Project: Parallel Bucketsort via OpenMP
+
+# Members 
+6488007 Poramee Apiradeewajeeset
+6488060 Pawita Pongpaew
+6488098 Chanayacha Suriyasoonthorn
+
 # Bucket Sort with OpenMP
 
 This program demonstrates the use of OpenMP to perform parallel bucket sort. It includes both sequential and parallel implementations of the bucket sort algorithm.
