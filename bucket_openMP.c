@@ -12,13 +12,14 @@ int compare(const void *a, const void *b) {
     return (*(int *)a - *(int *)b);
 }
 
-void SequentialSort(int arr[], int arraySize) {
-    struct Bucket buckets[4];
-    int i, j, k;
+void SequentialSort(int arr[], int SequentialSorted[], int arraySize) {
+    struct Bucket *buckets = (struct Bucket *)malloc(4 * sizeof(struct Bucket));
+    int i, j;
 
+    // Initialize buckets
     for (i = 0; i < 4; i++) {
         buckets[i].number = 0;
-        buckets[i].elements = (int *)malloc(arraySize * sizeof(int)); // Allocate space for all elements
+        buckets[i].elements = (int *)malloc((arraySize / 4) * sizeof(int));
     }
 
     // Distribute elements into buckets
@@ -27,11 +28,16 @@ void SequentialSort(int arr[], int arraySize) {
         buckets[bucketIndex].elements[buckets[bucketIndex].number++] = arr[i];
     }
 
-    k = 0;
+    // Sort the local buckets
     for (i = 0; i < 4; i++) {
         qsort(buckets[i].elements, buckets[i].number, sizeof(int), compare);
+    }
+
+    // Merge the sorted buckets back into the main array
+    int k = 0;
+    for (i = 0; i < 4; i++) {
         for (j = 0; j < buckets[i].number; j++) {
-            arr[k++] = buckets[i].elements[j];
+            SequentialSorted[k++] = buckets[i].elements[j];
         }
     }
 
@@ -39,6 +45,8 @@ void SequentialSort(int arr[], int arraySize) {
     for (i = 0; i < 4; i++) {
         free(buckets[i].elements);
     }
+
+    free(buckets);
 }
 
 void ParallelSort(int arr[], int ParallelSorted[], int arraySize, int numThreads) {
@@ -94,7 +102,7 @@ int main() {
     int arraySize = 10000; // Adjust the array size as needed
     int numThreads = 4;
 
-    time_t seq_start, seq_end;
+    clock_t seq_start, seq_end;
 
     // Adjust the number of threads as needed
     int *arr = (int *)malloc(arraySize * sizeof(int));
@@ -109,9 +117,9 @@ int main() {
     }
 
     // Sequential bucket Sort
-    time(&seq_start);
-    SequentialSort(SequentialSorted, arraySize);
-    time(&seq_end);
+    seq_start = clock();
+    SequentialSort(arr, SequentialSorted, arraySize);
+    seq_end = clock();
 
     // Parallel bucket sort using OpenMP
     double openmp_start = omp_get_wtime();
@@ -134,7 +142,8 @@ int main() {
     }
     */
 
-    //printf("\nTime used in sequential bucket sort using OpenMP: %lf seconds\n", difftime(seq_end, seq_start));
+    double seq_time = (double)(seq_end - seq_start) / CLOCKS_PER_SEC;
+    printf("\nTime used in sequential bucket sort: %lf seconds\n", seq_time);
     printf("\nTime used in parallel bucket sort using OpenMP: %lf seconds\n", openmp_end - openmp_start);
 
     free(arr);
