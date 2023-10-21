@@ -1,8 +1,4 @@
 # Project: Parallel Bucketsort via OpenMP
-Members: 
-6488007 Poramee Apiradeewajeese, 
-6488060 Pawita Pongpaew, 
-6488098 Chanayacha Suriyasoonthorn
 
 # Bucket Sort with OpenMP
 
